@@ -4,15 +4,15 @@
 
 * [Youtube Tutorial - 等待新增]()
 
-相信大家在網路上一定都看過 **API 文件**，
+相信大家在網路上一定都看過 **API 文件**，
 
 那我們該如何撰寫 **API 文件** 給別人看呢 ？
 
-今天我要教大家用 [Swagger](https://github.com/marcgibbons/django-rest-swagger) 來完成他 ！！
+今天我要教大家用 [Swagger](https://github.com/marcgibbons/django-rest-swagger) 來完成他 ！！
 
 ***溫馨小提醒***
 
-建議大家先對 [Django](https://github.com/django/django) 以及 [Django REST framework](http://www.django-rest-framework.org/) ( DRF ) 有基礎的知識。
+建議大家先對 [Django](https://github.com/django/django) 以及 [Django REST framework](http://www.django-rest-framework.org/) ( DRF ) 有基礎的知識。
 
 如果還不熟的人，可以先閱讀我之前寫的
 
@@ -37,7 +37,7 @@
 
 ***請記得要將 [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 加入設定檔***
 
-請在 [settings.py]() 裡面的 **INSTALLED_APPS** 加入下方程式碼
+請在 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 裡面的 **INSTALLED_APPS** 加入下方程式碼
 
 ```python
 INSTALLED_APPS = (
@@ -47,11 +47,11 @@ INSTALLED_APPS = (
 )
 ```
 
-如果加入上方程式碼，目前 [settings.py]() 裡面的 **INSTALLED_APPS** 應該會變成這樣 ( 如下圖 )
+如果加入上方程式碼，目前 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 裡面的 **INSTALLED_APPS** 應該會變成這樣 ( 如下圖 )
 
 ![alt tag](http://i.imgur.com/7wmx3jp.png)
 
-接著我們設定 Routers 路由 ，請將 [urls.py]() 增加一些程式碼
+接著我們設定 Routers 路由 ，請將 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 增加一些程式碼
 
 ```python
 from django.conf.urls import url
@@ -64,7 +64,7 @@ urlpatterns = [
 ]
 ```
 
-如果加入上方程式碼，目前的 [urls.py]() 會變成這樣  ( 如下圖 )
+如果加入上方程式碼，目前的 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 會變成這樣  ( 如下圖 )
 
 ![alt tag](http://i.imgur.com/y0qsmMi.png)
 
@@ -82,7 +82,7 @@ urlpatterns = [
 
 ### 執行畫面
 
-畫面非常漂亮，功能也非常完善，
+畫面非常漂亮，功能也非常完善，
 
 我們可以在上面執行 **GET** , **POST** , **PUT** , **PATCH** , **DELETE** , 甚至可以直接看到執行結果，
 
@@ -106,11 +106,11 @@ urlpatterns = [
 
 有沒有發現非常強大 :open_mouth:
 
-接下來你可能會擔心，這樣我的資料不就會被任何人任意操作 ？ 不用擔心，和之前介紹的  [授權 (Authenticaions )](https://github.com/twtrubiks/django-rest-framework-tutorial#%E6%8E%88%E6%AC%8A-authenticaions-) 是一樣的。
+接下來你可能會擔心，這樣我的資料不就會被任何人任意操作 ？ 不用擔心，和之前介紹的 [授權 (Authenticaions )](https://github.com/twtrubiks/django-rest-framework-tutorial#%E6%8E%88%E6%AC%8A-authenticaions-) 是一樣的。
 
 ## 授權（ Authentication ）
 
-在 [urls.py]() 底下加入下方程式碼  ( 也就是剛剛註解掉的程式碼 )
+在 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 底下加入下方程式碼  ( 也就是剛剛註解掉的程式碼 )
 
 ```python
 urlpatterns = [
@@ -118,7 +118,7 @@ urlpatterns = [
 ]
 ```
 
-在 [views.py]() 底下加入  **permission**
+在 [views.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/musics/views.py) 底下加入  **permission**
 
 ```python
 # Create your views here.
@@ -128,7 +128,7 @@ class MusicViewSet(viewsets.ModelViewSet):
      permission_classes = (IsAuthenticated,)
 ```
 
-在 [settings.py]() 底下加入下方程式碼
+在 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 底下加入下方程式碼
 
 ```python
 LOGIN_URL = 'rest_framework:login'
@@ -136,19 +136,26 @@ LOGOUT_URL = 'rest_framework:logout'
 ```
 
 執行 Django ， 然後瀏覽    [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
-
-你會發現，當你沒有登入的時候，你是看不到這些 API 的內容
+
+你會發現，當你沒有登入的時候，你是看不到這些 API 的內容
 
 ![alt tag](http://i.imgur.com/b3rbEZw.png)
 
-登入之後你才有權限可以看到這些資料
+登入之後你才有權限可以看到這些資料
 
 我的 帳號/密碼 設定為 twtrubiks/password123
 
+## 結論
+
+雖然  [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 非常強大，但有時候你會發現他自訂性比較低，
+
+所以說可能還是要考慮你自己的需求下去選擇撰寫 **API 文件** 的工具，
+
+接下來我將會介紹另一款自訂性較高的工具 [aglio](https://github.com/danielgtaylor/aglio)。
 
 ## 執行環境
 
-* Python 3.4.3
+* Python 3.5.3
 
 ## Reference
 
