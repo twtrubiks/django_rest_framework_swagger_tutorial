@@ -2,13 +2,13 @@
 
  Django-REST-Swagger 基本教學
 
-* [Youtube Tutorial - 等待新增]()
+* [Youtube Tutorial](https://youtu.be/ayTF26EIMFU)
 
 相信大家在網路上一定都看過 **API 文件**，
 
 那我們該如何撰寫 **API 文件** 給別人看呢 ？
 
-今天我要教大家用 [Swagger](https://github.com/marcgibbons/django-rest-swagger) 來完成他 ！！
+今天我要教大家使用 [Swagger](https://github.com/marcgibbons/django-rest-swagger) 來完成他 ！！
 
 ***溫馨小提醒***
 
@@ -72,13 +72,9 @@ urlpatterns = [
 
 最後執行 Django ， 然後瀏覽   [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
 
-你應該會看到如下圖
+你應該會看到如下圖 ( 如果你沒看到任何東西，可以點一下 **Show/Hide** )
 
 ![alt tag](http://i.imgur.com/qY9pz8N.png)
-
-如果你沒看到任何東西，可以點一下 **Show/Hide**
-
-恭喜你，成功了 :smile:
 
 ### 執行畫面
 
@@ -106,7 +102,7 @@ urlpatterns = [
 
 有沒有發現非常強大 :open_mouth:
 
-接下來你可能會擔心，這樣我的資料不就會被任何人任意操作 ？ 不用擔心，和之前介紹的 [授權 (Authenticaions )](https://github.com/twtrubiks/django-rest-framework-tutorial#%E6%8E%88%E6%AC%8A-authenticaions-) 是一樣的。
+接下來你可能會擔心，這樣我的資料不就會被任何人任意操作 ？ 不用擔心，和之前介紹的 [授權 (Authentication )](https://github.com/twtrubiks/django-rest-framework-tutorial#授權-authentications-) 是一樣的。
 
 ## 授權（ Authentication ）
 
@@ -125,7 +121,7 @@ urlpatterns = [
 class MusicViewSet(viewsets.ModelViewSet):
     queryset = Music.objects.all()
     serializer_class = MusicSerializer
-     permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 ```
 
 在 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 底下加入下方程式碼
@@ -143,15 +139,19 @@ LOGOUT_URL = 'rest_framework:logout'
 
 登入之後你才有權限可以看到這些資料
 
-我的 帳號/密碼 設定為 twtrubiks/password123
+我的 帳號/密碼 設定為 twtrubiks/password123 ，
+
+Swagger 的基本介紹我們就介紹到這邊，更多的說明可以參考 [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 。
 
 ## 結論
 
 雖然  [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 非常強大，但有時候你會發現他自訂性比較低，
 
-所以說可能還是要考慮你自己的需求下去選擇撰寫 **API 文件** 的工具，
+所以說可能還是要考慮當下的需求下去選擇撰寫 **API 文件** 的工具，
 
-接下來我將會介紹另一款自訂性較高的工具 [aglio](https://github.com/danielgtaylor/aglio)。
+如果你需要自訂性較高撰寫 **API 文件** 的工具，
+
+可以參考 [aglio_tutorial](https://github.com/twtrubiks/aglio_tutorial)
 
 ## 執行環境
 
