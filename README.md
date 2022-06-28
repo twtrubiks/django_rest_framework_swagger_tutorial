@@ -1,6 +1,6 @@
 # django-rest-framework-swagger-tutorial
 
- Django-REST-Swagger 基本教學
+Django-REST-Swagger 基本教學
 
 * [Youtube Tutorial](https://youtu.be/ayTF26EIMFU)
 
@@ -8,7 +8,7 @@
 
 那我們該如何撰寫 **API 文件** 給別人看呢 ？
 
-今天我要教大家使用 [Swagger](https://github.com/marcgibbons/django-rest-swagger) 來完成他 ！！
+今天我要教大家使用 [drf-yasg](https://github.com/axnsan12/drf-yasg) 來完成他 ！！
 
 ***溫馨小提醒***
 
@@ -30,51 +30,66 @@
 
 請在你的命令提示字元 (cmd ) 底下輸入
 
-安裝 [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger)
->pip install django-rest-swagger
+安裝 [drf-yasg](https://github.com/axnsan12/drf-yasg)
+>pip install drf-yasg
 
-### django-rest-swagger 設定
+### drf-yasg 設定
 
-***請記得要將 [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 加入設定檔***
+***請記得要將 [drf-yasg](https://github.com/axnsan12/drf-yasg) 加入設定檔***
 
 請在 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 裡面的 **INSTALLED_APPS** 加入下方程式碼
 
 ```python
 INSTALLED_APPS = (
     ...
-    'rest_framework_swagger',
-    ...
+    'django.contrib.staticfiles',
+    'drf_yasg',
+    'rest_framework',
 )
 ```
-
-如果加入上方程式碼，目前 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 裡面的 **INSTALLED_APPS** 應該會變成這樣 ( 如下圖 )
-
-![alt tag](http://i.imgur.com/7wmx3jp.png)
 
 接著我們設定 Routers 路由 ，請將 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 增加一些程式碼
 
 ```python
-from django.conf.urls import url
-from rest_framework_swagger.views import get_swagger_view
+......
 
-schema_view = get_swagger_view(title='API')
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+#    public=True,
+   public=False, # need login
+   permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
-    url(r'^$', schema_view)
+    path('admin/', admin.site.urls),
+
+    # for rest_framework
+    path('api/', include(router.urls)),
+    # for rest_framework auth
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    re_path('swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path('swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path('redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 ```
 
-如果加入上方程式碼，目前的 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 會變成這樣  ( 如下圖 )
+最後執行 Django ，然後瀏覽 [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
 
-![alt tag](http://i.imgur.com/y0qsmMi.png)
-
-32 行我們先把他註解掉，
-
-最後執行 Django ， 然後瀏覽   [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
-
-你應該會看到如下圖 ( 如果你沒看到任何東西，可以點一下 **Show/Hide** )
+你應該會看到如下圖 (如果你沒看到任何東西，可以點一下 **Show/Hide** )
 
 ![alt tag](http://i.imgur.com/qY9pz8N.png)
+
+也可以瀏覽 [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
+
+![alt tag](https://i.imgur.com/WsHAMmk.png)
 
 ### 執行畫面
 
@@ -102,15 +117,20 @@ urlpatterns = [
 
 有沒有發現非常強大 :open_mouth:
 
-接下來你可能會擔心，這樣我的資料不就會被任何人任意操作 ？ 不用擔心，和之前介紹的 [授權 (Authentication )](https://github.com/twtrubiks/django-rest-framework-tutorial#授權-authentications-) 是一樣的。
+接下來你可能會擔心，這樣我的資料不就會被任何人任意操作?
+
+不用擔心，和之前介紹的 [授權 (Authentication)](https://github.com/twtrubiks/django-rest-framework-tutorial#授權-authentications-) 是一樣的。
 
 ## 授權（ Authentication ）
 
-在 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 底下加入下方程式碼  ( 也就是剛剛註解掉的程式碼 )
+在 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 底下程式碼,
 
 ```python
 urlpatterns = [
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    ......
+    # for rest_framework auth
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    ......
 ]
 ```
 
@@ -126,14 +146,22 @@ class MusicViewSet(viewsets.ModelViewSet):
 
 在 [settings.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/settings.py) 底下加入下方程式碼
 
+設定 SWAGGER_SETTINGS 為使用 rest_framework login, logout
+
 ```python
-LOGIN_URL = 'rest_framework:login'
-LOGOUT_URL = 'rest_framework:logout'
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout'
+}
 ```
 
-執行 Django ， 然後瀏覽    [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
+也要把 [urls.py](https://github.com/twtrubiks/django_rest_framework_swagger_tutorial/blob/master/django_rest_framework_swagger_tutorial/urls.py) 中的 public 設為 `False`.
 
-你會發現，當你沒有登入的時候，你是看不到這些 API 的內容
+可參考 [https://drf-yasg.readthedocs.io/en/stable/settings.html](https://drf-yasg.readthedocs.io/en/stable/settings.html)
+
+執行 Django, 然後瀏覽 [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
+
+你會發現，當你沒有登入的時候，你是看不到這些 API 的內容,
 
 ![alt tag](http://i.imgur.com/b3rbEZw.png)
 
@@ -141,27 +169,17 @@ LOGOUT_URL = 'rest_framework:logout'
 
 我的 帳號/密碼 設定為 twtrubiks/password123 ，
 
-Swagger 的基本介紹我們就介紹到這邊，更多的說明可以參考 [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 。
-
-## 結論
-
-雖然  [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger) 非常強大，但有時候你會發現他自訂性比較低，
-
-所以說可能還是要考慮當下的需求下去選擇撰寫 **API 文件** 的工具，
-
-如果你需要自訂性較高撰寫 **API 文件** 的工具，
-
-可以參考 [aglio_tutorial](https://github.com/twtrubiks/aglio_tutorial)
+Swagger 的基本介紹我們就介紹到這邊，更多的說明可以參考 [drf-yasg](https://github.com/axnsan12/drf-yasg)
 
 ## 執行環境
 
-* Python 3.5.3
+* Python 3.8
 
 ## Reference
 
 * [Django](https://www.djangoproject.com/)
-* [Django-REST-framework](http://www.django-rest-framework.org/)
-* [Django-rest-swagger](https://github.com/marcgibbons/django-rest-swagger)
+* [Django-REST-framework](https://www.django-rest-framework.org/)
+* [drf-yasg](https://github.com/axnsan12/drf-yasg)
 
 ## License
 
